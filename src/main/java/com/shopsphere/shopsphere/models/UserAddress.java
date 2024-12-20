@@ -1,6 +1,8 @@
 package com.shopsphere.shopsphere.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Min;
 
 @Entity
 @Table(name = "user_address")
@@ -11,18 +13,18 @@ public class UserAddress {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
+    @NotBlank(message = "Veuillez saisir une adresse")
     private int street;
 
-    @Column(nullable = false)
+    @NotBlank(message = "Veuillez saisir une ville")
     private String city;
 
-    @Column(nullable = false)
+    @NotBlank(message = "Veuillez saisir un code postal")
     private int postal_code;
 
-    @Column(nullable = false)
+    @NotBlank(message = "Veuillez saisir un pays")
     private String country;
 
-    @Column
+    @Min(value = 10, message = "Veuillez saisir un numéro de téléphone valide")
     private String phone_number;
 }

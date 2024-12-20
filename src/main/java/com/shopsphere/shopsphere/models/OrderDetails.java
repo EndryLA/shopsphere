@@ -1,6 +1,8 @@
 package com.shopsphere.shopsphere.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 
 import java.util.Date;
 
@@ -12,14 +14,15 @@ public class OrderDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
-    private double price;
+    @NotBlank
+    private double amount;
 
-    @Column(nullable = false)
+    @NotBlank(message = "La date de la commande est érronée")
     private Date date;
 
     @OneToOne
     @JoinColumn(name = "payment_id", referencedColumnName = "id")
+    @Valid
     private PaymentDetails paymentDetails;
 
 }

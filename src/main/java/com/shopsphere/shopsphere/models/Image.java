@@ -1,6 +1,8 @@
 package com.shopsphere.shopsphere.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "image")
@@ -11,14 +13,14 @@ public class Image {
     private int id;
 
     @Lob
-    @Column(nullable = false)
+    @NotNull(message = "Veuillez saisir une image")
     private Byte[] image;
+
 
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
 
-    @Column(nullable = false)
     private Boolean main_image;
 
 }

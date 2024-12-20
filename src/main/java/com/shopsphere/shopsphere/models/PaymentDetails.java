@@ -1,6 +1,7 @@
 package com.shopsphere.shopsphere.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "payment_details")
@@ -11,13 +12,13 @@ public class PaymentDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
+    @NotBlank
     private double amount;
 
-    @Column(nullable = false)
+    @NotBlank
     private String provider;
 
-    @Column(nullable = false)
+    @NotBlank
     private String status;
 
     @OneToOne

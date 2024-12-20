@@ -1,6 +1,7 @@
 package com.shopsphere.shopsphere.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "order_item")
@@ -10,7 +11,7 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
+    @NotBlank
     private int quantity;
 
     @ManyToOne
