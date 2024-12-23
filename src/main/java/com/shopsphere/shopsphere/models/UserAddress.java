@@ -27,4 +27,54 @@ public class UserAddress {
 
     @Min(value = 10, message = "Veuillez saisir un numéro de téléphone valide")
     private String phone_number;
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getStreet() {
+        return street;
+    }
+
+    public void setStreet(int street) {
+        this.street = street;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public int getPostalCode() {
+        return postal_code;
+    }
+
+    public void setPostalCode(int postal_code) {
+        this.postal_code = postal_code;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getPhoneNumber() {
+        return phone_number;
+    }
+
+    public void setPhoneNumber(String phone_number) {
+        this.phone_number = phone_number;
+    }
+
 }

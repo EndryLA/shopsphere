@@ -23,4 +23,35 @@ public class Image {
 
     private Boolean main_image;
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(Byte[] image) {
+        this.image = image;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    public Boolean getMainImage() {
+        return main_image;
+    }
+
+    public void setMainImage(Boolean main_image) {
+        this.main_image = main_image;
+    }
 }
