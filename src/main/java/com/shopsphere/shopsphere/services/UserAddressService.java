@@ -19,9 +19,6 @@ public class UserAddressService {
                 .orElseThrow(() -> new EntityNotFoundException("Adresse introuvable"));
     }
 
-    public UserAddress getUserAddressByUserId(int userId) {
-        return userAddressRepository.findByUserId(userId);
-    }
 
     public UserAddress createUserAddress(UserAddress userAddress) {
         return userAddressRepository.save(userAddress);
