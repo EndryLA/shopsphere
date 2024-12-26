@@ -19,4 +19,21 @@ public class ProductInventoryService {
         return productInventoryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Inventaire indisponible"));
     }
+
+    public ProductInventory createProductInventory(ProductInventory productInventory) {
+        return productInventoryRepository.save(productInventory);
+    }
+
+    public ProductInventory updateProductInventory(ProductInventory productInventory, int id) {
+        ProductInventory productToUpdate = productInventoryRepository.findById(productInventory.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Produit introuvable"));
+
+        productToUpdate.setQuantity(productInventory.getQuantity());
+
+        return productInventoryRepository.save(productToUpdate);
+    }
+
+    public void deleteProductInventory(int id) {
+        productInventoryRepository.deleteById(id);
+    }
 }
