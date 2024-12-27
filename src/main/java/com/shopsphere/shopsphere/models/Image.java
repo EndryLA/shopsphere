@@ -17,13 +17,17 @@ public class Image {
     @NotNull(message = "Veuillez saisir une image")
     private Byte[] image;
 
-
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     @JsonIgnore
     private Product product;
 
     private Boolean main_image;
+
+    private String extension;
+
+
+
 
     public int getId() {
         return id;
@@ -56,4 +60,13 @@ public class Image {
     public void setMainImage(Boolean main_image) {
         this.main_image = main_image;
     }
+
+    public String getExtension() {
+        return extension;
+    }
+
+    public void setExtension(String extension) {
+        this.extension = extension;
+    }
+
 }
