@@ -14,16 +14,13 @@ public class OrderDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @NotBlank
-    private double amount;
-
-    @NotBlank(message = "La date de la commande est érronée")
-    private Date date;
-
     @OneToOne
-    @JoinColumn(name = "payment_id", referencedColumnName = "id")
-    @Valid
-    private PaymentDetails paymentDetails;
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+
+    @NotBlank
+    private int payment_id;
+
 
 
     public int getId() {
@@ -34,29 +31,16 @@ public class OrderDetails {
         this.id = id;
     }
 
-    public double getAmount() {
-        return amount;
+    public int getAmount() {
+        return payment_id;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
+    public void setAmount(int payment_id) {
+        this.payment_id = payment_id;
     }
 
-    public Date getDate() {
-        return date;
-    }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
 
-    public PaymentDetails getPaymentDetails() {
-        return paymentDetails;
-    }
-
-    public void setPaymentDetails(PaymentDetails paymentDetails) {
-        this.paymentDetails = paymentDetails;
-    }
 
 
 

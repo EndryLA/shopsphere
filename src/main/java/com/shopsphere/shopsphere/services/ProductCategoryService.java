@@ -42,6 +42,11 @@ public class ProductCategoryService {
     }
 
     public void deleteProductCategory(int categoryId) {
-        productCategoryRepository.deleteById(categoryId);
+
+        ProductCategory productToDelete =  productCategoryRepository.findById(categoryId)
+                        .orElseThrow(() -> new EntityNotFoundException("Catégorie Introuvable"));
+
+
+        productCategoryRepository.deleteById(productToDelete.getId());
     }
 }

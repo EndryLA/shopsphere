@@ -5,5 +5,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserAddressRepository extends JpaRepository<UserAddress, Integer> {
 
-    public UserAddress findByUserId(int userId);
 }
