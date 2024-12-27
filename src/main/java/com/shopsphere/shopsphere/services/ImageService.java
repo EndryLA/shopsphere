@@ -52,6 +52,7 @@ public class ImageService {
         productToUpdate.setImage(image.getImage());
         productToUpdate.setMainImage(image.getMainImage());
         productToUpdate.setProduct(image.getProduct());
+        productToUpdate.setExtension(image.getExtension());
 
         return imageRepository.save(productToUpdate);
     }
