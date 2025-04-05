@@ -31,6 +31,25 @@ public class ProductCategoryController {
         return new ResponseEntity<>(categories, HttpStatus.OK);
     }
 
+    @GetMapping("/{categoryId}")
+    public ResponseEntity<ProductCategory> getCategoryById(@PathVariable int categoryId) {
+        try {
+
+            ProductCategory category = productCategoryService.getProductCategoryById(categoryId);
+            return new ResponseEntity<>(category,HttpStatus.OK);
+
+        } catch (EntityNotFoundException e) {
+
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage(),e);
+
+        } catch (Exception e) {
+
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"Une erreur inattendue est survenue",e);
+
+        }
+
+    }
+
     @PostMapping("")
     public ResponseEntity<ProductCategory> createCategory(@RequestBody ProductCategory productCategory) {
 

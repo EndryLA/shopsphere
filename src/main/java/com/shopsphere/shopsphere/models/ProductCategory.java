@@ -18,6 +18,7 @@ public class ProductCategory {
     @NotBlank(message = "Veuillez saisir une description valide")
     private String description;
 
+
     public int getId() {
         return id;
     }

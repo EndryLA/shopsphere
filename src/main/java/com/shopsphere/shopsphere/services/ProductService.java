@@ -18,7 +18,11 @@ public class ProductService {
     private final ImageRepository imageRepository;
     private final ProductInventoryRepository productInventoryRepository;
 
-    public ProductService(ProductRepository productRepository, ImageRepository imageRepository, ProductInventoryRepository productInventoryRepository) {
+    public ProductService(
+            ProductRepository productRepository,
+            ImageRepository imageRepository,
+            ProductInventoryRepository productInventoryRepository) {
+
         this.productRepository = productRepository;
         this.imageRepository = imageRepository;
         this.productInventoryRepository = productInventoryRepository;
@@ -33,12 +37,17 @@ public class ProductService {
                 .orElseThrow(() -> new EntityNotFoundException("Le produit demandé est introuvable"));
     }
 
+    public List<Product> getProductsByCategoryId(int categoryId) {
+        return productRepository.findAllByCategoryId(categoryId);
+    }
+
     public Product createProduct(Product product) {
         return productRepository.save(product);
     }
 
-    public Product updateProduct(Product product) {
-        Product productToUpdate = productRepository.findById(product.getId())
+
+    public Product updateProduct(Product product, int id) {
+        Product productToUpdate = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Le produit demandé est introuvable"));
 
         productToUpdate.setName(product.getName());
@@ -53,22 +62,22 @@ public class ProductService {
     public void deleteProduct(int productId) {
         // Fetch the product or throw an exception if not found
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new EntityNotFoundException("Produit introuvable"));
+                .orElseThrow(() -> new EntityNotFoundException("Le produit demandé est introuvable"));
 
-        // Handle associated images
+        // Delete associated images
         List<Image> images = imageRepository.findByProductId(productId);
-        for (Image image : images) {
-            imageRepository.delete(image); // Delete each associated image
+        if (!images.isEmpty()) {
+            imageRepository.deleteAll(images); // Bulk delete for better efficiency
         }
 
-        // Handle associated inventory
+        // Delete associated inventory if it exists
         if (product.getQuantity() != null) {
             productInventoryRepository.findById(product.getQuantity().getId())
-                    .ifPresent(productInventoryRepository::delete); // Delete inventory if it exists
+                    .ifPresent(productInventoryRepository::delete);
         }
 
         // Delete the product
-        productRepository.deleteById(productId);
+        productRepository.delete(product); // Use delete(product) to ensure entity integrity
     }
 
 

@@ -3,6 +3,7 @@ package com.shopsphere.shopsphere.controllers;
 import com.shopsphere.shopsphere.models.Product;
 import com.shopsphere.shopsphere.services.ProductService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,13 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<List<Product>> getProductsByCategoryId(@PathVariable int categoryId){
+        List<Product> products = productService.getProductsByCategoryId(categoryId);
+
+        return new ResponseEntity<>(products,HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProduct(@PathVariable int id) {
         try {
@@ -51,9 +59,48 @@ public class ProductController {
         try {
             Product savedProduct = productService.createProduct(product);
             return new ResponseEntity<>(savedProduct,HttpStatus.CREATED);
+
         } catch (Exception exception) {
+            System.out.println(product);
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Une erreur inattendue est survenue",exception);
         }
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Product> updateProduct(@PathVariable int id, @RequestBody Product product) {
+
+        try {
+            Product productToUpdate = productService.updateProduct(product,id);
+
+            return new ResponseEntity<>(productToUpdate,HttpStatus.OK);
+
+        } catch (EntityNotFoundException e) {
+
+            throw new  ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage(),e);
+
+        } catch (Exception e) {
+
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Une erreur inattendue est survenue",e);
+
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable int id) {
+        try {
+            productService.deleteProduct(id);
+            return ResponseEntity.noContent().build();
+        } catch (EntityNotFoundException e) {
+
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,e.getMessage(),e);
+
+        } catch (Exception e) {
+
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Une erreur inattendue est survenue",e);
+
+        }
+
+    }
+
 
 }
