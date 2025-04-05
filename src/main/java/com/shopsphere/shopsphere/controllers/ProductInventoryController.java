@@ -22,7 +22,21 @@ public class ProductInventoryController {
         this.productInventoryService = productInventoryService;
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductInventory> getProductInventory(@PathVariable int id) {
+        try {
+            ProductInventory productInventory = productInventoryService.getProductInventoryById(id);
+            return new ResponseEntity<>(productInventory,HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
 
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+
+        } catch (Exception e) {
+
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Une erreur inattendue est survenue",e);
+
+        }
+    }
 
     @PostMapping("")
     public ResponseEntity<ProductInventory> createProductInventory(@RequestBody ProductInventory productInventory) {

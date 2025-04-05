@@ -20,9 +20,30 @@ public class SpecsService {
         return specsRepository.findSpecsByProductId(id);
     }
 
-    public Specs getSpecsById(int id) {
+    public Specs getSpecById(int id) {
         return specsRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Spécification introuvable"));
+    }
+
+    public Specs createSpec(Specs spec) {
+
+        return specsRepository.save(spec);
+
+    }
+
+    public Specs updateSpec(Specs spec) {
+
+        Specs specToUpdate = specsRepository.findById(spec.getId())
+                .orElseThrow(() -> new EntityNotFoundException("Spécification introuvable"));
+
+        specToUpdate.setKey(spec.getKey());
+        specToUpdate.setValue(spec.getValue());
+
+        return specsRepository.save(specToUpdate);
+    }
+
+    public void deleteSpec(int id) {
+        specsRepository.deleteById(id);
     }
 
 

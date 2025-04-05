@@ -25,7 +25,7 @@ public class ProductInventoryService {
     }
 
     public ProductInventory updateProductInventory(ProductInventory productInventory, int id) {
-        ProductInventory productToUpdate = productInventoryRepository.findById(productInventory.getId())
+        ProductInventory productToUpdate = productInventoryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Produit introuvable"));
 
         productToUpdate.setQuantity(productInventory.getQuantity());

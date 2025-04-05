@@ -25,7 +25,7 @@ public class Product {
     @Positive(message = "Le prix ne peut pas être inférieur à 0€")
     private double price;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "category_id",referencedColumnName = "id", nullable = false)
     @Valid
     private ProductCategory category;
