@@ -16,9 +16,10 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
 
          http
-                .csrf(customizer -> customizer.disable())
                 .authorizeHttpRequests(request -> request
-                        .anyRequest().permitAll());
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .anyRequest().authenticated()
+                );
 
          return http.build();
     }
