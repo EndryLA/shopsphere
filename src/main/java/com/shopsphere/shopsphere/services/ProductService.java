@@ -7,6 +7,9 @@ import com.shopsphere.shopsphere.repositories.ImageRepository;
 import com.shopsphere.shopsphere.repositories.ProductInventoryRepository;
 import com.shopsphere.shopsphere.repositories.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,8 +31,15 @@ public class ProductService {
         this.productInventoryRepository = productInventoryRepository;
     }
 
+
+
     public List<Product> getProducts() {
         return productRepository.findAll();
+    }
+
+    public Page<Product> getPagedProducts(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return productRepository.findAll(pageable);
     }
 
     public Product getProductById(int productId) {

@@ -4,6 +4,7 @@ import com.shopsphere.shopsphere.models.Product;
 import com.shopsphere.shopsphere.services.ProductService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,12 +23,28 @@ public class ProductController {
     }
 
 
-    @GetMapping("")
+    @GetMapping("/unpaged")
     public ResponseEntity<List<Product>> getProducts() {
 
         List<Product> products = productService.getProducts();
 
         return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<Page<Product>> getProductsPaged(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "20") int size) {
+
+        try {
+            Page<Product> products = productService.getPagedProducts(page, size);
+
+            return new ResponseEntity<>(products,HttpStatus.OK);
+
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,"Une erreur inattendue est survenue");
+        }
+
     }
 
     @GetMapping("/category/{categoryId}")
