@@ -33,11 +33,11 @@ public class User implements UserDetails {
     @NotBlank(message = "Veuillez saisir une adresse mail")
     private String email;
 
-    @NotBlank
+    @NotBlank(message = "Veuillez saisir un mot de passe")
     private String password;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = true)
     @Valid
     private UserAddress address;
 
