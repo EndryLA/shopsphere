@@ -28,12 +28,12 @@ public class AuthenticationService {
 
     public String login(User user) {
 
-        Authentication authenticaiton = this.authManager.authenticate(new UsernamePasswordAuthenticationToken(
+        Authentication authentication = this.authManager.authenticate(new UsernamePasswordAuthenticationToken(
                 user.getUsername(),
                 user.getPassword()
         ));
 
-        if (authenticaiton.isAuthenticated()) {
+        if (authentication.isAuthenticated()) {
             return jwtService.generateToken(user);
         } else {
             return "Invalid credentials";
