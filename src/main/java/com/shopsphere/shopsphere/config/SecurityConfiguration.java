@@ -27,7 +27,6 @@ public class SecurityConfiguration {
     private int saltRounds;
 
     private CustomUserDetailsService customUserDetailsService;
-
     private JwtFilter jwtFilter;
 
     public SecurityConfiguration(CustomUserDetailsService customUserDetailsService, JwtFilter jwtFilter) {
@@ -40,11 +39,12 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
 
          http
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/api/auth/**").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
 
 

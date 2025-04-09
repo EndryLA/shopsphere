@@ -28,6 +28,8 @@ public class AuthenticationService {
 
     public String login(User user) {
 
+        System.out.println("Received User" + user);
+
         Authentication authentication = this.authManager.authenticate(new UsernamePasswordAuthenticationToken(
                 user.getUsername(),
                 user.getPassword()
@@ -43,6 +45,10 @@ public class AuthenticationService {
 
 
     public User register(User user) {
+
+        System.out.println("Received User at authService level" + user);
+
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         return this.userRepository.save(user);
