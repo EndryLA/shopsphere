@@ -1,7 +1,9 @@
 package com.shopsphere.shopsphere.controllers;
 
 import com.shopsphere.shopsphere.models.Product;
+import com.shopsphere.shopsphere.models.Review;
 import com.shopsphere.shopsphere.services.ProductService;
+import com.shopsphere.shopsphere.services.ReviewService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -13,17 +15,19 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/")
 public class ProductController {
 
     private final ProductService productService;
+    private final ReviewService reviewService;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, ReviewService reviewService) {
         this.productService = productService;
+        this.reviewService = reviewService;
     }
 
 
-    @GetMapping("/unpaged")
+    @GetMapping("public/products/unpaged")
     public ResponseEntity<List<Product>> getProducts() {
 
         List<Product> products = productService.getProducts();
@@ -31,7 +35,7 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    @GetMapping("")
+    @GetMapping("public/products")
     public ResponseEntity<Page<Product>> getProductsPaged(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "20") int size) {
@@ -47,14 +51,14 @@ public class ProductController {
 
     }
 
-    @GetMapping("/category/{categoryId}")
+    @GetMapping("public/products/category/{categoryId}")
     public ResponseEntity<List<Product>> getProductsByCategoryId(@PathVariable int categoryId){
         List<Product> products = productService.getProductsByCategoryId(categoryId);
 
         return new ResponseEntity<>(products,HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("public/products/{id}")
     public ResponseEntity<Product> getProduct(@PathVariable int id) {
         try {
             Product product = productService.getProductById(id);
@@ -71,9 +75,20 @@ public class ProductController {
         }
     }
 
-    @PostMapping("")
+    @GetMapping("public/products/reviews/{productId}")
+    public ResponseEntity<List<Review>> getProductReviews(@PathVariable int productId) {
+
+        List<Review> reviews =  reviewService.getReviewsByProductId(productId);
+
+        return new ResponseEntity<>(reviews,HttpStatus.OK);
+    }
+
+    @PostMapping("products")
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         try {
+
+            System.out.println(product.getInventory());
+
             Product savedProduct = productService.createProduct(product);
             return new ResponseEntity<>(savedProduct,HttpStatus.CREATED);
 
@@ -83,7 +98,7 @@ public class ProductController {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("products/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable int id, @RequestBody Product product) {
 
         try {
@@ -102,7 +117,7 @@ public class ProductController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("products/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable int id) {
         try {
             productService.deleteProduct(id);

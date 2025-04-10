@@ -38,7 +38,7 @@ public class AuthenticationService {
         if (authentication.isAuthenticated()) {
             return jwtService.generateToken(user);
         } else {
-            return "Invalid credentials";
+            return "Adresse ou mot de passe incorrect";
         }
 
     }

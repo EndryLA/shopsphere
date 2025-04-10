@@ -26,7 +26,7 @@ public class ImageService {
         List<Image> images = imageRepository.findByProductId(productId);
 
         for (Image image : images) {
-            image.setImage(null);
+            image.setFile(null);
         }
 
         return images;
@@ -49,10 +49,10 @@ public class ImageService {
         Image productToUpdate = imageRepository.findById(image.getId())
                 .orElseThrow(() -> new EntityNotFoundException("L'image demandée est introuvable"));
 
-        productToUpdate.setImage(image.getImage());
+        productToUpdate.setFile(image.getFile());
         productToUpdate.setMainImage(image.getMainImage());
         productToUpdate.setProduct(image.getProduct());
-        productToUpdate.setExtension(image.getExtension());
+        productToUpdate.setFilename(image.getFilename());
 
         return imageRepository.save(productToUpdate);
     }
@@ -60,4 +60,7 @@ public class ImageService {
     public void deleteImage(int imageId) {
         imageRepository.deleteById(imageId);
     }
+
+    // Utils
+
 }

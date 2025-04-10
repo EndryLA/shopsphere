@@ -36,7 +36,6 @@ public class ProductCategoryService {
                 .orElseThrow(() -> new EntityNotFoundException("Catéorie introuvable"));
 
         productCategoryToUpdate.setName(category.getName());
-        productCategoryToUpdate.setDescription(category.getDescription());
 
         return productCategoryRepository.save(productCategoryToUpdate);
     }

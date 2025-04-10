@@ -7,6 +7,7 @@ import com.shopsphere.shopsphere.repositories.ImageRepository;
 import com.shopsphere.shopsphere.repositories.ProductInventoryRepository;
 import com.shopsphere.shopsphere.repositories.ProductRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -52,6 +53,7 @@ public class ProductService {
     }
 
     public Product createProduct(Product product) {
+
         return productRepository.save(product);
     }
 
@@ -64,30 +66,26 @@ public class ProductService {
         productToUpdate.setPrice(product.getPrice());
         productToUpdate.setCategory(product.getCategory());
         productToUpdate.setDescription(product.getDescription());
-        productToUpdate.setQuantity(product.getQuantity());
+        productToUpdate.setInventory(product.getInventory());
 
         return productRepository.save(productToUpdate);
     }
 
     public void deleteProduct(int productId) {
-        // Fetch the product or throw an exception if not found
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new EntityNotFoundException("Le produit demandé est introuvable"));
 
-        // Delete associated images
         List<Image> images = imageRepository.findByProductId(productId);
         if (!images.isEmpty()) {
-            imageRepository.deleteAll(images); // Bulk delete for better efficiency
+            imageRepository.deleteAll(images);
         }
 
-        // Delete associated inventory if it exists
-        if (product.getQuantity() != null) {
-            productInventoryRepository.findById(product.getQuantity().getId())
+        if (product.getInventory() != null) {
+            productInventoryRepository.findById(product.getInventory().getId())
                     .ifPresent(productInventoryRepository::delete);
         }
 
-        // Delete the product
-        productRepository.delete(product); // Use delete(product) to ensure entity integrity
+        productRepository.delete(product);
     }
 
 
