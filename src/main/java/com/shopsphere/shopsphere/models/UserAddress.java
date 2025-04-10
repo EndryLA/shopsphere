@@ -14,7 +14,7 @@ public class UserAddress {
     private int id;
 
     @NotBlank(message = "Veuillez saisir une adresse")
-    private int street;
+    private String street;
 
     @NotBlank(message = "Veuillez saisir une ville")
     private String city;
@@ -37,11 +37,11 @@ public class UserAddress {
         this.id = id;
     }
 
-    public int getStreet() {
+    public String getStreet() {
         return street;
     }
 
-    public void setStreet(int street) {
+    public void setStreet(String street) {
         this.street = street;
     }
 
