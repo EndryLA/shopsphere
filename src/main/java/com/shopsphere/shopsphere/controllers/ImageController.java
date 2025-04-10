@@ -2,6 +2,8 @@ package com.shopsphere.shopsphere.controllers;
 
 import com.shopsphere.shopsphere.models.Image;
 import com.shopsphere.shopsphere.services.ImageService;
+import com.shopsphere.shopsphere.services.ProductService;
+import com.shopsphere.shopsphere.utils.ImageUtils;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,92 +20,82 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/api/images")
+@RequestMapping("/api/")
 public class ImageController {
 
-    // Maximum image size (16MB)
-    private static final long MAX_IMAGE_SIZE = 16 * 1024 * 1024;
 
-    // Allowed image types
-    private static final Set<String> ALLOWED_CONTENT_TYPES = new HashSet<>(Arrays.asList(
-            "image/jpeg",
-            "image/png",
-            "image/webp",
-            "image/jpg"
-    ));
 
     private final ImageService imageService;
+    private final ImageUtils imageUtils;
+    private final ProductService productService;
 
-    public ImageController(ImageService imageService) {
+    public ImageController(ImageService imageService, ImageUtils imageUtils, ProductService productService) {
         this.imageService = imageService;
+        this.imageUtils = imageUtils;
+        this.productService = productService;
     }
 
-    /**
-     * Validates an uploaded image
-     * @param image The image to validate
-     * @throws IllegalArgumentException if validation fails
-     */
-    private void validateImage(MultipartFile image) {
-        // Check if image is empty
-        if (image.isEmpty()) {
-            throw new IllegalArgumentException("L'image ne peut pas être vide");
-        }
+    @GetMapping("public/images/{id}")
+    public ResponseEntity<byte[]> getImage(@PathVariable int id) {
+        try {
+            Image image = imageService.getImageById(id);
 
-        // Check image size
-        if (image.getSize() > MAX_IMAGE_SIZE) {
-            throw new IllegalArgumentException("La taille de l'image dépasse la limite maximale de 5MB");
-        }
+            if (image.getFile() == null) {
+                return ResponseEntity.notFound().build();
+            }
 
-        // Check image type
-        String contentType = image.getContentType();
-        if (contentType == null || !ALLOWED_CONTENT_TYPES.contains(contentType.toLowerCase())) {
-            throw new IllegalArgumentException("Type d'image invalide. Types autorisés: JPEG, PNG, GIF");
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_JPEG);
+
+            byte[] imageData = imageUtils.convertToPrimitiveBytes(image.getFile());
+            headers.setContentLength(imageData.length);
+
+            return new ResponseEntity<>(imageData, headers, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
         }
     }
 
-    /**
-     * Converts primitive byte array to Byte object array
-     */
-    private Byte[] convertToByteObjects(byte[] bytes) {
-        Byte[] byteObjects = new Byte[bytes.length];
-        for (int i = 0; i < bytes.length; i++) {
-            byteObjects[i] = bytes[i];
-        }
-        return byteObjects;
+    @GetMapping("public/images/product/{productId}")
+    public List<Image> getProductImages(@PathVariable int productId) {
+        return imageService.getImagesByProductId(productId);
     }
 
-    /**
-     * Converts Byte object array to primitive byte array
-     */
-    private byte[] convertToPrimitiveBytes(Byte[] bytes) {
-        byte[] primitiveBytes = new byte[bytes.length];
-        for (int i = 0; i < bytes.length; i++) {
-            primitiveBytes[i] = bytes[i];
+    @GetMapping("public/images/product/{productId}/main")
+    public ResponseEntity<byte[]> getMainImage(@PathVariable int productId) {
+        try {
+            Image image = imageService.getMainImageByProductId(productId);
+
+            if (image.getFile() == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            byte[] imageData = imageUtils.convertToPrimitiveBytes(image.getFile());
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.IMAGE_JPEG);
+            headers.setContentLength(imageData.length);
+
+            return new ResponseEntity<>(imageData, headers, HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
         }
-        return primitiveBytes;
     }
 
-    /**
-     * Upload a new image
-     * @param image The image file
-     * @param product_id The product ID
-     * @param main_image Whether this is the main product image
-     * @return Response indicating success or failure
-     */
-    @PostMapping("")
+    @PostMapping("images")
     public ResponseEntity<String> uploadImage(
-            @RequestParam("image") MultipartFile image,
-            @RequestParam("product_id") int product_id,
-            @RequestParam(value = "main_image", defaultValue = "false") boolean main_image) {
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("productId") int productId,
+            @RequestParam(value = "isMainImage", defaultValue = "false") boolean isMainImage) {
 
         try {
-            validateImage(image);
+            imageUtils.validateImage(file);
 
             Image imageEntity = new Image();
-            imageEntity.setImage(convertToByteObjects(image.getBytes()));
-            imageEntity.setMainImage(main_image);
+            imageEntity.setFile(imageUtils.convertToByteObjects(file.getBytes()));
+            imageEntity.setMainImage(isMainImage);
             // Set product using ProductService
-            // imageEntity.setProduct(productService.getProductById(product_id));
+            imageEntity.setProduct(productService.getProductById(productId));
 
             imageService.createImage(imageEntity);
 
@@ -116,50 +108,7 @@ public class ImageController {
         }
     }
 
-    /**
-     * Get an image by its ID
-     * @param id The image ID
-     * @return The image data with appropriate headers
-     */
-    @GetMapping("/{id}")
-    public ResponseEntity<byte[]> getImage(@PathVariable int id) {
-        try {
-            Image image = imageService.getImageById(id);
-
-            if (image.getImage() == null) {
-                return ResponseEntity.notFound().build();
-            }
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.IMAGE_JPEG);
-
-            byte[] imageData = convertToPrimitiveBytes(image.getImage());
-            headers.setContentLength(imageData.length);
-
-            return new ResponseEntity<>(imageData, headers, HttpStatus.OK);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    /**
-     * Get all images for a product
-     * @param product_id The product ID
-     * @return List of images
-     */
-    @GetMapping("/product/{product_id}")
-    public List<Image> getProductImages(@PathVariable int product_id) {
-        return imageService.getImagesByProductId(product_id);
-    }
-
-    /**
-     * Update an existing image
-     * @param id The image ID
-     * @param image The new image file (optional)
-     * @param main_image The new main image status (optional)
-     * @return Response indicating success or failure
-     */
-    @PutMapping("/{id}")
+    @PutMapping("images/{id}")
     public ResponseEntity<String> updateImage(
             @PathVariable int id,
             @RequestParam(required = false) MultipartFile image,
@@ -169,8 +118,8 @@ public class ImageController {
             Image existingImage = imageService.getImageById(id);
 
             if (image != null) {
-                validateImage(image);
-                existingImage.setImage(convertToByteObjects(image.getBytes()));
+                imageUtils.validateImage(image);
+                existingImage.setFile(imageUtils.convertToByteObjects(image.getBytes()));
             }
 
             if (main_image != null) {
@@ -190,33 +139,8 @@ public class ImageController {
         }
     }
 
-    @GetMapping("/product/{productId}/main")
-    public ResponseEntity<byte[]> getMainImage(@PathVariable int productId) {
-        try {
-            Image image = imageService.getMainImageByProductId(productId);
 
-            if (image.getImage() == null) {
-                return ResponseEntity.notFound().build();
-            }
-
-            byte[] imageData = convertToPrimitiveBytes(image.getImage());
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.IMAGE_JPEG);
-            headers.setContentLength(imageData.length);
-
-            return new ResponseEntity<>(imageData, headers, HttpStatus.OK);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    /**
-     * Delete an image
-     * @param id The image ID
-     * @return Response indicating success or failure
-     */
-    @DeleteMapping("/{id}")
+    @DeleteMapping("images/{id}")
     public ResponseEntity<String> deleteImage(@PathVariable int id) {
         try {
             imageService.deleteImage(id);

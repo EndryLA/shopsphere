@@ -20,15 +20,6 @@ public class AuthController {
         this.authenticationService = authenticationService;
     }
 
-    @GetMapping("/testing")
-    public String testing() {
-
-        System.out.println("Received request at controller level");
-
-
-        return "text";
-    }
-
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody User user) {
 
