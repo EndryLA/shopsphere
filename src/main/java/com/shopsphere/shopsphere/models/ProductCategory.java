@@ -14,9 +14,6 @@ public class ProductCategory {
     @NotBlank(message = "Veuillez saisir un nom pour le produit")
     private String name;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    @NotBlank(message = "Veuillez saisir une description valide")
-    private String description;
 
     public int getId() {
         return id;
@@ -33,14 +30,5 @@ public class ProductCategory {
     public void setName(String name) {
         this.name = name;
     }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
 
 }

@@ -1,5 +1,6 @@
 package com.shopsphere.shopsphere.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -14,14 +15,17 @@ public class Image {
 
     @Lob
     @NotNull(message = "Veuillez saisir une image")
-    private Byte[] image;
-
+    private Byte[] file;
 
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id")
+    @JsonIgnore
     private Product product;
 
-    private Boolean main_image;
+    private Boolean isMainImage;
+
+    private String filename;
+
 
     public int getId() {
         return id;
@@ -31,12 +35,12 @@ public class Image {
         this.id = id;
     }
 
-    public Byte[] getImage() {
-        return image;
+    public Byte[] getFile() {
+        return file;
     }
 
-    public void setImage(Byte[] image) {
-        this.image = image;
+    public void setFile(Byte[] file) {
+        this.file = file;
     }
 
     public Product getProduct() {
@@ -48,10 +52,18 @@ public class Image {
     }
 
     public Boolean getMainImage() {
-        return main_image;
+        return isMainImage;
     }
 
-    public void setMainImage(Boolean main_image) {
-        this.main_image = main_image;
+    public void setMainImage(Boolean mainImage) {
+        isMainImage = mainImage;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 }

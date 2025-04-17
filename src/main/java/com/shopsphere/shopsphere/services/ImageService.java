@@ -23,8 +23,23 @@ public class ImageService {
     }
 
     public List<Image> getImagesByProductId(int productId) {
-        return imageRepository.findByProductId(productId);
+        List<Image> images = imageRepository.findByProductId(productId);
+
+        for (Image image : images) {
+            image.setFile(null);
+        }
+
+        return images;
     }
+
+    public Image getMainImageByProductId(int productId) {
+        List<Image> images = imageRepository.findByProductId(productId);
+        return images.stream()
+                .filter(image -> Boolean.TRUE.equals(image.getMainImage()))
+                .findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("L'image principale pour ce produit est introuvable"));
+    }
+
 
     public Image createImage(Image image) {
         return imageRepository.save(image);
@@ -34,9 +49,10 @@ public class ImageService {
         Image productToUpdate = imageRepository.findById(image.getId())
                 .orElseThrow(() -> new EntityNotFoundException("L'image demandée est introuvable"));
 
-        productToUpdate.setImage(image.getImage());
+        productToUpdate.setFile(image.getFile());
         productToUpdate.setMainImage(image.getMainImage());
         productToUpdate.setProduct(image.getProduct());
+        productToUpdate.setFilename(image.getFilename());
 
         return imageRepository.save(productToUpdate);
     }
@@ -44,4 +60,7 @@ public class ImageService {
     public void deleteImage(int imageId) {
         imageRepository.deleteById(imageId);
     }
+
+    // Utils
+
 }

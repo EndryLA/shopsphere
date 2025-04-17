@@ -36,12 +36,16 @@ public class ProductCategoryService {
                 .orElseThrow(() -> new EntityNotFoundException("Catéorie introuvable"));
 
         productCategoryToUpdate.setName(category.getName());
-        productCategoryToUpdate.setDescription(category.getDescription());
 
         return productCategoryRepository.save(productCategoryToUpdate);
     }
 
     public void deleteProductCategory(int categoryId) {
-        productCategoryRepository.deleteById(categoryId);
+
+        ProductCategory productToDelete =  productCategoryRepository.findById(categoryId)
+                        .orElseThrow(() -> new EntityNotFoundException("Catégorie Introuvable"));
+
+
+        productCategoryRepository.deleteById(productToDelete.getId());
     }
 }

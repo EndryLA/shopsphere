@@ -25,15 +25,19 @@ public class Product {
     @Positive(message = "Le prix ne peut pas être inférieur à 0€")
     private double price;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "category_id",referencedColumnName = "id", nullable = false)
     @Valid
     private ProductCategory category;
 
-    @OneToOne
-    @JoinColumn(name = "quantity_id", referencedColumnName = "id", nullable = false)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "inventory_id", referencedColumnName = "id", nullable = false)
     @Valid
-    private ProductInventory quantity;
+    private ProductInventory inventory;
+
+    private double averageRating;
+
+    private String mainSpecs;
 
     public int getId() {
         return id;
@@ -75,13 +79,27 @@ public class Product {
         this.category = category;
     }
 
-    public ProductInventory getQuantity() {
-        return quantity;
+    public ProductInventory getInventory() {
+        return inventory;
     }
 
-    public void setQuantity(ProductInventory quantity_id) {
-        this.quantity = quantity_id;
+    public void setInventory(ProductInventory inventory) {
+        this.inventory = inventory;
     }
 
+    public double getAverageRating() {
+        return averageRating;
+    }
 
+    public void setAverageRating(double averageRating) {
+        this.averageRating = averageRating;
+    }
+
+    public String getMainSpecs() {
+        return mainSpecs;
+    }
+
+    public void setMainSpecs(String mainSpecs) {
+        this.mainSpecs = mainSpecs;
+    }
 }

@@ -19,15 +19,8 @@ public class OrderDetails {
     private User user;
 
     @NotBlank
-    private double amount;
+    private int payment_id;
 
-    @NotBlank(message = "La date de la commande est érronée")
-    private Date date;
-
-    @OneToOne
-    @JoinColumn(name = "payment_id", referencedColumnName = "id")
-    @Valid
-    private PaymentDetails paymentDetails;
 
 
     public int getId() {
@@ -38,29 +31,16 @@ public class OrderDetails {
         this.id = id;
     }
 
-    public double getAmount() {
-        return amount;
+    public int getAmount() {
+        return payment_id;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
+    public void setAmount(int payment_id) {
+        this.payment_id = payment_id;
     }
 
-    public Date getDate() {
-        return date;
-    }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
 
-    public PaymentDetails getPaymentDetails() {
-        return paymentDetails;
-    }
-
-    public void setPaymentDetails(PaymentDetails paymentDetails) {
-        this.paymentDetails = paymentDetails;
-    }
 
 
 
