@@ -1,6 +1,6 @@
 package com.shopsphere.shopsphere.repositories;
 
-import com.shopsphere.shopsphere.models.OrderDetails;
+import com.shopsphere.shopsphere.domain.models.OrderDetails;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
