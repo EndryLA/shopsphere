@@ -1,6 +1,5 @@
 package com.shopsphere.shopsphere.domain.services;
 
-import com.shopsphere.shopsphere.domain.models.UserAddress;
 import com.shopsphere.shopsphere.repositories.UserAddressRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
