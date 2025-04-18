@@ -16,8 +16,6 @@ public class UserDTO {
 
     private String email;
 
-    private String password;
-
     private String street;
 
     private String city;
@@ -33,12 +31,11 @@ public class UserDTO {
 
     // CONSTRUCTOR
 
-    public UserDTO(int id, String firstname, String lastname, String email, String password, String street, String city, int postalCode, String country, String phoneNumber, Set<Authority> authorities) {
+    public UserDTO(int id, String firstname, String lastname, String email, String street, String city, int postalCode, String country, String phoneNumber, Set<Authority> authorities) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
-        this.password = password;
         this.street = street;
         this.city = city;
         this.postalCode = postalCode;
@@ -81,14 +78,6 @@ public class UserDTO {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getStreet() {
