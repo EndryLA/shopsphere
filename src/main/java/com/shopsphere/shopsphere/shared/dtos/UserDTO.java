@@ -26,12 +26,12 @@ public class UserDTO {
 
     private String phoneNumber;
 
-    private Set<Authority> authorities;
+    private Set<String> authorities;
 
 
     // CONSTRUCTOR
 
-    public UserDTO(int id, String firstname, String lastname, String email, String street, String city, int postalCode, String country, String phoneNumber, Set<Authority> authorities) {
+    public UserDTO(int id, String firstname, String lastname, String email, String street, String city, int postalCode, String country, String phoneNumber, Set<String> authorities) {
         this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
@@ -44,6 +44,9 @@ public class UserDTO {
         this.authorities = authorities;
     }
 
+    public UserDTO() {
+
+    }
 
 
     // GETTERS & SETTERS
@@ -120,11 +123,11 @@ public class UserDTO {
         this.phoneNumber = phoneNumber;
     }
 
-    public Set<Authority> getAuthorities() {
+    public Set<String> getAuthorities() {
         return authorities;
     }
 
-    public void setAuthorities(Set<Authority> authorities) {
+    public void setAuthorities(Set<String> authorities) {
         this.authorities = authorities;
     }
 }
