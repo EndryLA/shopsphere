@@ -3,6 +3,7 @@ package com.shopsphere.shopsphere.domain.models;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.springframework.security.core.GrantedAuthority;
@@ -35,10 +36,16 @@ public class User implements UserDetails {
     @NotBlank(message = "Veuillez saisir un mot de passe")
     private String password;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", referencedColumnName = "id", nullable = true)
-    @Valid
-    private UserAddress address;
+    private String street;
+
+    private String city;
+
+    private int postalCode;
+
+    private String country;
+
+    @Min(value = 10, message = "Veuillez saisir un numéro de téléphone valide")
+    private String phoneNumber;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(
@@ -81,6 +88,50 @@ public class User implements UserDetails {
         this.email = email;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public int getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(int postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public void setAuthorities(Set<Authority> authorities) {
+        this.authorities = authorities;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
@@ -98,14 +149,5 @@ public class User implements UserDetails {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    public UserAddress getAddress() {
-        return address;
-    }
-
-    public void setAddress(UserAddress address) {
-        this.address = address;
-    }
-
 
 }
