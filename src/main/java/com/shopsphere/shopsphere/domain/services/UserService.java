@@ -1,6 +1,8 @@
 package com.shopsphere.shopsphere.domain.services;
 
+import com.shopsphere.shopsphere.domain.models.Authority;
 import com.shopsphere.shopsphere.domain.models.User;
+import com.shopsphere.shopsphere.repositories.AuthorityRepository;
 import com.shopsphere.shopsphere.repositories.UserRepository;
 import com.shopsphere.shopsphere.shared.dtos.UserDTO;
 import com.shopsphere.shopsphere.shared.mappers.UserMapper;
@@ -21,10 +23,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthorityRepository authorityRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthorityRepository authorityRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.authorityRepository = authorityRepository;
     }
 
 
