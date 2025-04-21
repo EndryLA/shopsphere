@@ -7,6 +7,8 @@ import com.shopsphere.shopsphere.repositories.UserRepository;
 import com.shopsphere.shopsphere.shared.dtos.UserDTO;
 import com.shopsphere.shopsphere.shared.mappers.UserMapper;
 import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,12 +17,16 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthorityRepository authorityRepository;
@@ -33,8 +39,8 @@ public class UserService {
 
 
 
-    public Page<UserDTO> getUsers(int page, int size, Sort sort){
-        Pageable pageable = PageRequest.of(page, size, sort);
+    public Page<UserDTO> getUsers(int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
 
         Page<User> users = userRepository.findAll(pageable);
 
@@ -55,7 +61,26 @@ public class UserService {
 
         String hashedPassword = passwordEncoder.encode(user.getPassword());
 
+        Set<Authority> userAuthorities = Optional.ofNullable(user.getAuthorities())
+                .orElse(new HashSet<>())
+                .stream()
+                .map(authority -> (Authority) authority)
+                .collect(Collectors.toSet());
+
+
+
+        Authority defaultAuthority = authorityRepository.findByRole("ROLE_USER");
+
+        if (defaultAuthority == null) {
+            defaultAuthority = new Authority();
+            defaultAuthority.setRole("ROLE_USER");
+
+            defaultAuthority = authorityRepository.save(defaultAuthority);
+        }
+
+        userAuthorities.add(defaultAuthority);
         user.setPassword(hashedPassword);
+        user.setAuthorities(userAuthorities);
 
         User savedUser = userRepository.save(user);
 
