@@ -1,5 +1,6 @@
 package com.shopsphere.shopsphere.domain.services;
 
+import com.shopsphere.shopsphere.domain.models.Authority;
 import com.shopsphere.shopsphere.domain.models.User;
 import com.shopsphere.shopsphere.repositories.UserRepository;
 import com.shopsphere.shopsphere.shared.dtos.UserDTO;
@@ -13,14 +14,17 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -29,8 +33,8 @@ public class UserService {
 
 
 
-    public Page<UserDTO> getUsers(int page, int size, Sort sort){
-        Pageable pageable = PageRequest.of(page, size, sort);
+    public Page<UserDTO> getUsers(int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
 
         Page<User> users = userRepository.findAll(pageable);
 
