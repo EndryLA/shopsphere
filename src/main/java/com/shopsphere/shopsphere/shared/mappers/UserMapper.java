@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 public class UserMapper {
 
-    public static UserDTO userDTO(User user) {
+    public static UserDTO userToDTO(User user) {
 
         Set<String> authorities = user.getAuthorities().stream()
                 .map(authority -> authority.getAuthority())
