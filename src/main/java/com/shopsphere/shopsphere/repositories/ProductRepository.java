@@ -1,6 +1,6 @@
 package com.shopsphere.shopsphere.repositories;
 
-import com.shopsphere.shopsphere.models.Product;
+import com.shopsphere.shopsphere.domain.models.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
