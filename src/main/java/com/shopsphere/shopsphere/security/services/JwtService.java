@@ -1,17 +1,23 @@
 package com.shopsphere.shopsphere.security.services;
 
+import com.shopsphere.shopsphere.domain.models.Authority;
 import com.shopsphere.shopsphere.domain.models.User;
+import com.shopsphere.shopsphere.repositories.AuthorityRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
@@ -23,15 +29,27 @@ public class JwtService {
     @Value("${spring.jwt.expiration-time}")
     private int expirationTime;
 
+    private AuthorityRepository authorityRepository;
+
+    public JwtService(AuthorityRepository authorityRepository) {
+        this.authorityRepository = authorityRepository;
+    }
+
 
 
     public String generateToken(User user) {
+
+        Set<String> authorities = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
+
+        System.out.println(authorities);
+
         return Jwts
                 .builder()
                 .signWith(getSignInKey())
                 .subject(user.getUsername())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expirationTime))
+                .claim("authorities", authorities)
                 .compact();
     }
 

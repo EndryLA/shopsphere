@@ -11,7 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/specs")
+@RequestMapping("/api/")
 public class SpecsController {
 
     private final SpecsService specsService;
@@ -20,7 +20,7 @@ public class SpecsController {
         this.specsService = specsService;
     }
 
-    @GetMapping("/product/{productId}")
+    @GetMapping("public/specs/product/{productId}")
     public ResponseEntity<List<Specs>> getSpecsByProductId(@PathVariable int productId) {
         try {
             List<Specs> specs = specsService.getSpecsByProductId(productId);
@@ -34,7 +34,7 @@ public class SpecsController {
         }
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("public/specs/{id}")
     public ResponseEntity<Specs> getSpecById(@PathVariable int id) {
         try {
 
@@ -52,14 +52,14 @@ public class SpecsController {
         }
     }
 
-    @PostMapping("")
+    @PostMapping("/specs")
     public ResponseEntity<Specs> createSpec(@RequestBody Specs specs) {
 
         return new ResponseEntity<>(specsService.createSpec(specs),HttpStatus.CREATED);
 
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/specs/{id}")
     public ResponseEntity<Specs> updateSpec(@RequestBody Specs spec,@PathVariable int id) {
         try {
             return new ResponseEntity<>(specsService.updateSpec(spec),HttpStatus.OK);
@@ -68,7 +68,7 @@ public class SpecsController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/specs/{id}")
     public ResponseEntity<Void> deleteSpec(@PathVariable int id) {
             try  {
 

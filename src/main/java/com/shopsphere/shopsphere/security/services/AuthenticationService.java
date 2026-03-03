@@ -1,5 +1,6 @@
 package com.shopsphere.shopsphere.security.services;
 
+import com.shopsphere.shopsphere.domain.models.Authority;
 import com.shopsphere.shopsphere.domain.models.User;
 import com.shopsphere.shopsphere.repositories.UserRepository;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,7 +29,7 @@ public class AuthenticationService {
 
     public String login(User user) {
 
-        System.out.println("Received User" + user);
+
 
         Authentication authentication = this.authManager.authenticate(new UsernamePasswordAuthenticationToken(
                 user.getUsername(),
@@ -36,7 +37,8 @@ public class AuthenticationService {
         ));
 
         if (authentication.isAuthenticated()) {
-            return jwtService.generateToken(user);
+            User foundUser = userRepository.findByEmail(user.getEmail());
+            return jwtService.generateToken(foundUser);
         } else {
             return "Adresse ou mot de passe incorrect";
         }

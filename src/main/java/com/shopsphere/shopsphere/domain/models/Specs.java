@@ -1,6 +1,7 @@
 package com.shopsphere.shopsphere.domain.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 @Entity
@@ -19,7 +20,7 @@ public class Specs {
 
     @ManyToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id")
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Product product;
 
     // Getters and Setters
